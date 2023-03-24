@@ -60,4 +60,40 @@ JOIN customer c
 ON t2.customer_id = c.customer_id
 ORDER BY 2
 
-
+/*
+Q3. Finally, for each of these top 10 paying customers, I would like
+to find out the difference across their monthly payments during 2007.
+Please go ahead and write a query to compare the payment amounts in 
+each successive month. Repeat this for each of these 10 paying customers.
+Also, it will be tremendously helpful if you can identify the customer
+name who paid the most difference in terms of payments.
+*/
+-- Get Top 10 customers and return as table1 
+WITH table1 AS (
+	SELECT c.customer_id, SUM(p.amount)	  
+	FROM customer c
+	JOIN rental r
+	ON c.customer_id = r.customer_id
+	JOIN payment p
+	ON r.rental_id = p.rental_id 
+	GROUP BY 1
+	ORDER BY 2 DESC
+	LIMIT 10
+	)
+-- Get monthly differences in spending of each top 10 customer in 2007
+ 	,table2 AS(
+	SELECT  t1.customer_id,
+		DATE_TRUNC('month',p.payment_date) pay_month,SUM(p.amount),
+		LAG(SUM(p.amount),1,0) OVER (PARTITION BY t1.customer_id ORDER BY DATE_TRUNC('month',p.payment_date)),
+		SUM(p.amount)-
+		LAG(SUM(p.amount),1,0) OVER (PARTITION BY t1.customer_id ORDER BY DATE_TRUNC('month',p.payment_date))
+	FROM table1 t1
+	JOIN rental r
+	ON t1.customer_id = r.customer_id
+	JOIN payment p
+	ON r.rental_id = p.rental_id 
+	WHERE DATE_PART('year',p.payment_date) = '2007'
+	GROUP BY 1,2
+	)
+SELECT *
+FROM table2
