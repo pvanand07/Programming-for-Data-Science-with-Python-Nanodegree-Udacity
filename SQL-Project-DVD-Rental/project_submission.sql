@@ -24,14 +24,24 @@ ON  fc.category_id = cat.category_id
 GROUP BY 1
 			)
 			
-SELECT f.title,cat.name,t1.rental_count
-FROM table1 t1
+/*
+Revenue and Rental Duration by Category
+*/
+
+SELECT cat.name Movie_category, 
+	   SUM(p.amount) Total_revenue,
+	   ROUND(AVG(f.rental_duration),2) average_rental_duration
+FROM rental r
+JOIN inventory i 
+ON r.inventory_id = i.inventory_id
 JOIN film_category fc 
-ON fc.film_id = t1.film_id
+ON fc.film_id = i.film_id
 JOIN category cat
 ON  fc.category_id = cat.category_id
+JOIN payment p
+ON p.rental_id = r.rental_id
 JOIN film f
 ON f.film_id = fc.film_id
-WHERE LOWER(cat.name) IN 
-('animation','children', 'classics', 'comedy', 'family','music')
-ORDER BY 2,1
+GROUP BY 1
+ORDER BY 2 DESC
+
