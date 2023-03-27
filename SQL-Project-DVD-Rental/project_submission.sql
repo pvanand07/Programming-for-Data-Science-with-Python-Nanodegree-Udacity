@@ -45,3 +45,15 @@ ON f.film_id = fc.film_id
 GROUP BY 1
 ORDER BY 2 DESC
 
+/*
+Monthly Revenue by stores
+*/
+
+SELECT DISTINCT(DATE_TRUNC('month',p.payment_date)) Payment_month,c.store_id,SUM(p.amount) Revenue  
+FROM customer c
+JOIN rental r
+ON c.customer_id = r.customer_id
+JOIN payment p
+ON r.rental_id = p.rental_id
+GROUP BY 1,2
+ORDER BY 1,2
