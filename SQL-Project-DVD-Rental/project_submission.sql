@@ -12,8 +12,22 @@ Q1.Create a query that lists each movie, the film category it is
    classified in and the number of times it has been rented out.
 */
 
-WITH table1 AS (
-SELECT fc.film_id, COUNT(r.rental_id) rental_count
+WITH table1
+     AS (SELECT cat.NAME           category_name,
+                Count(r.rental_id) rental_count
+         FROM   rental r
+         JOIN   inventory i
+         ON     r.inventory_id = i.inventory_id
+         JOIN   film_category fc
+         ON     fc.film_id = i.film_id
+         JOIN   category cat
+         ON     fc.category_id = cat.category_id
+         GROUP  BY 1
+         ORDER  BY 2 DESC)
+SELECT category_name,
+       Round(rental_count * 100 / (SELECT Sum(rental_count)
+                                   FROM   table1), 2) AS perc_rental_count
+FROM   table1 
 FROM rental r
 JOIN inventory i 
 ON r.inventory_id = i.inventory_id
