@@ -57,3 +57,28 @@ JOIN payment p
 ON r.rental_id = p.rental_id
 GROUP BY 1,2
 ORDER BY 1,2
+
+/*
+4. Plot count of rentals and its 5 day moving average during the year 2005
+*/
+
+WITH table1 AS
+(
+         SELECT   Date_trunc('day',r.rental_date) rental_date,
+                  Count(r.rental_id)              rental_count
+         FROM     rental r
+         JOIN     inventory i
+         ON       r.inventory_id = i.inventory_id
+         JOIN     film_category fc
+         ON       fc.film_id = i.film_id
+         JOIN     category cat
+         ON       fc.category_id = cat.category_id
+         JOIN     payment p
+         ON       r.rental_id = p.rental_id
+         GROUP BY 1
+         ORDER BY 1 )
+SELECT   Date(rental_date) AS date,
+         rental_count,
+         round(avg(rental_count) OVER (ORDER BY rental_date rows BETWEEN 4 PRECEDING AND CURRENT row ) )AS _5_day_moving_avg
+FROM     table1 limit 32;
+			   
