@@ -27,9 +27,11 @@ SELECT category_name,
        Round(rental_count * 100 / (SELECT Sum(rental_count)
                                    FROM   table1), 2) AS perc_rental_count
 FROM   table1 
+
 /*
 Q2. What is the total revenue and average rental duration for each movie category?
 */
+
 SELECT cat.NAME                         Movie_category,
        Sum(p.amount)                    Total_revenue,
        Round(Avg(f.rental_duration), 2) average_rental_duration
@@ -61,7 +63,6 @@ FROM   customer c
        ON     r.rental_id = p.rental_id
 GROUP BY 1,2
 ORDER BY 1,2
-
 
 /*
 Q4. Plot count of rentals and its 5 day moving average during the year 2005
