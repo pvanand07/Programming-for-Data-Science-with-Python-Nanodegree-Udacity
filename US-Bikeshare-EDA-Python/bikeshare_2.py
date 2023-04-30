@@ -7,33 +7,46 @@ CITY_DATA = { 'chicago': 'chicago.csv',
               'washington': 'washington.csv' }
 
 def get_filters():
-    """
+    '''
     Asks user to specify a city, month, and day to analyze.
 
     Returns:
         (str) city - name of the city to analyze
         (str) month - name of the month to filter by, or "all" to apply no month filter
         (str) day - name of the day of week to filter by, or "all" to apply no day filter
-    """
-    print('Hello! Let\'s explore some US bikeshare data!')
-    
-    #1 get user input to filter by city (chicago, new york, washington). 
-    cities = list(CITY_DATA.keys())
-    city = input(f'Enter city name from {cities}').lower()
-    while city not in cities:
-        city = input(f'Try again, Enter city name from {cities}').lower()
+    '''
+    # Print a welcome message to the user
+    print("Hello! Let's explore some US bikeshare data!")
 
-    #2 get user input to filter month(all, january, february, ... , june)
-    months = ['all','january', 'february', 'march', 'april', 'may', 'june']
-    month = input(f'Enter month name to filter by {months}').lower()
+    # Get a list of available cities from the CITY_DATA dictionary
+    cities = list(CITY_DATA.keys())
+
+    # Ask the user to input a city name to filter by
+    city = input(f"Enter city name to filter by {cities}").lower()
+
+    # Keep asking for city input until a valid city name is entered
+    while city not in cities:
+        city = input(f"Try again, Enter city name to filter by {cities}").lower()
+
+    # Define a list of available months to filter by
+    months = ['all', 'january', 'february', 'march', 'april', 'may', 'june']
+
+    # Ask the user to input a month name to filter by
+    month = input(f"Enter month name to filter by {months}").lower()
+
+    # Keep asking for month input until a valid month name is entered
     while month not in months:
-        month = input(f'Enter month name to filter by {months}').lower()
-        
-    #3 get user input for day of week (all, monday, tuesday, ... sunday)
-    days = ["all","monday","tuesday","wednesday","thursday","friday","saturday","sunday"]
-    day = input(f'Enter day name to filter by {days}').lower()
+        month = input(f"Enter month name to filter by {months}").lower()
+
+    # Define a list of available days of the week to filter by
+    days = ['all', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+
+    # Ask the user to input a day of the week to filter by
+    day = input(f"Enter day name to filter by {days}").lower()
+
+    # Keep asking for day input until a valid day name is entered
     while day not in days:
-        day = input(f'Try again, Enter day name to filter by {days}').lower()
+        day = input(f"Try again, Enter day name to filter by {days}").lower()
 
     print('-'*45)
     return city, month, day
