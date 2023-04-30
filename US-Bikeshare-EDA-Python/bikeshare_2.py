@@ -52,18 +52,44 @@ def get_filters():
     return city, month, day
 
 def load_data(city, month, day):
-    """
+    # provide postion arguments in the function definition to load data for the specified city, month and day
+
+    '''
     Loads data for the specified city and filters by month and day if applicable.
 
     Args:
         (str) city - name of the city to analyze
         (str) month - name of the month to filter by, or "all" to apply no month filter
         (str) day - name of the day of week to filter by, or "all" to apply no day filter
+
     Returns:
         df - Pandas DataFrame containing city data filtered by month and day
-    """
+    
+    '''
+    # Load data from the specified city
+    df = pd.read_csv(CITY_DATA[city])
 
+    # Convert the "Start Time" column to datetime format
+    df['Start Time'] = pd.to_datetime(df['Start Time'])
 
+    # Extract the month, day of week, and hour from the "Start Time" column
+    df['month'] = df['Start Time'].dt.month
+    df['day_of_week'] = df['Start Time'].dt.day_name()
+    df['hour'] = df['Start Time'].dt.hour
+
+    # Filter the data by the specified month
+    if month != 'all':
+        months = ['january', 'february', 'march', 'april', 'may', 'june']
+        df = df[df['month'] == (months.index(month)+1)]
+
+    # Filter the data by the specified day of week
+    if day != 'all':
+        df = df[df['day_of_week'] == day.title()]
+
+    # Display the first five rows of the filtered data and return it
+
+    display(df.head().T)
+    print('-' * 40)
     return df
 
 
